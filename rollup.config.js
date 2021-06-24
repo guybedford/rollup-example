@@ -1,5 +1,5 @@
 import path from 'path';
-import typescript from '@rollup/plugin-typescript';
+import babel from '@babel/core';
 import { terser } from 'rollup-plugin-terser';
 import rimraf from 'rimraf';
 
@@ -23,7 +23,29 @@ export default {
       if (!id.endsWith('.js') && !id.endsWith('.ts'))
         return path.resolve(path.dirname(parentId), id + '.ts');
     }
-  }, typescript(), terser({
+  }, {
+    transform (code, id) {
+      if (id.endsWith('.ts'))
+        return new Promise((resolve, reject) => {
+          return babel.transform(code, {
+            filename: id,
+            sourceMaps: true,
+            ast: false,
+            compact: false,
+            sourceType: 'module',
+            parserOpts: {
+              // plugins: stage3Syntax,
+              errorRecovery: true
+            },
+            presets: ['@babel/preset-typescript']
+          }, function (err, result) {
+            if (err)
+              return reject(err);
+            resolve(result);
+          });  
+        });
+    }
+  }, terser({
     mangle: false,
     output: {
       preamble: `/*!
