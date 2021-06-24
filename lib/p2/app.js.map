@@ -1,0 +1,1 @@
+{"version":3,"file":"app.js","sources":["app.ts"],"sourcesContent":["import { share1 } from '../shared/share1';\r\nimport { external1 } from '../external/external1';\r\n\r\nconsole.log('p2 uses ' + share1);\r\n"],"names":["console","log","share1"],"mappings":";;;;;;;;sDAGAA,QAAQC,IAAI,WAAaC"}
